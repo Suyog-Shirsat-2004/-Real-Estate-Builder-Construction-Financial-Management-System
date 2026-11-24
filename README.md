@@ -1,5 +1,7 @@
 # Real Estate Builder — Construction & Financial Management System
 
+A Django-based Real Estate Builder Construction and Financial Management System to manage construction projects, site operations, employees, contractors, materials, inventory, expenses, payments, and financial reports.
+
 A clean Django 6 + Bootstrap 5 application for managing construction projects from both a **Site Manager** and a **Site Supervisor** perspective.
 
 ## Quick start
