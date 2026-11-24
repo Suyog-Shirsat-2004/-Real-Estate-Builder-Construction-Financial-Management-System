@@ -1,0 +1,86 @@
+{% load static %}
+<div class="site-gallery reveal {% if gallery_mode == 'compact' %}site-gallery--compact{% endif %}">
+  <div class="site-gallery-head d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+      <span class="badge bg-primary bg-opacity-10 text-primary mb-2">FROM THE FIELD</span>
+      <h4 class="fw-bold mb-1">{{ gallery_title|default:"Site gallery" }}</h4>
+      <p class="text-muted small mb-0">Real site photographs used across the construction workspace.</p>
+    </div>
+    <span class="badge bg-light text-secondary border">
+      <i class="bi bi-images me-1"></i>{% if gallery_mode == 'compact' %}6{% else %}17{% endif %} images
+    </span>
+  </div>
+
+  <div class="site-gallery-grid">
+    {% if gallery_mode != 'compact' %}
+      <figure class="gallery-item">
+        <img src="{% static 'images/building-2.avif' %}" alt="High-rise building under construction" loading="lazy">
+        <figcaption>Project tower</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/site-engineer-5.avif' %}" alt="Site engineer inspecting construction work" loading="lazy">
+        <figcaption>Engineer inspection</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/site-engineer-1.webp' %}" alt="Site engineer reviewing plans" loading="lazy">
+        <figcaption>Reviewing plans</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/site-engineer-2.webp' %}" alt="Engineer at the construction site" loading="lazy">
+        <figcaption>On site</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/site-engineer-3.webp' %}" alt="Engineering team discussion" loading="lazy">
+        <figcaption>Team discussion</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/site-engineer-4.webp' %}" alt="Engineer checking site progress" loading="lazy">
+        <figcaption>Progress check</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/field-supervisor-1.webp' %}" alt="Site supervisor with the site team" loading="lazy">
+        <figcaption>Supervisor &amp; team</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/field-supervisor-2.webp' %}" alt="Supervisor managing daily site work" loading="lazy">
+        <figcaption>Daily site work</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/field-supervisor-3.webp' %}" alt="Site supervisor inspecting work" loading="lazy">
+        <figcaption>Site inspection</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/field-supervisor-4.webp' %}" alt="Construction site supervision" loading="lazy">
+        <figcaption>Site supervision</figcaption>
+      </figure>
+      <figure class="gallery-item">
+        <img src="{% static 'images/working-5-alt.jpg' %}" alt="Construction work in progress" loading="lazy">
+        <figcaption>Work in progress</figcaption>
+      </figure>
+    {% endif %}
+    <figure class="gallery-item">
+      <img src="{% static 'images/working-1.jpg' %}" alt="Construction site work" loading="lazy">
+      <figcaption>Site work</figcaption>
+    </figure>
+    <figure class="gallery-item">
+      <img src="{% static 'images/working-2.jpg' %}" alt="Workers at the construction site" loading="lazy">
+      <figcaption>Workers on site</figcaption>
+    </figure>
+    <figure class="gallery-item">
+      <img src="{% static 'images/working-3.jpg' %}" alt="Foundation work at the site" loading="lazy">
+      <figcaption>Foundation work</figcaption>
+    </figure>
+    <figure class="gallery-item">
+      <img src="{% static 'images/working-4.jpg' %}" alt="Construction materials and work area" loading="lazy">
+      <figcaption>Work area</figcaption>
+    </figure>
+    <figure class="gallery-item">
+      <img src="{% static 'images/working-5.jpg' %}" alt="Building construction progress" loading="lazy">
+      <figcaption>Building progress</figcaption>
+    </figure>
+    <figure class="gallery-item">
+      <img src="{% static 'images/working-6.jpg' %}" alt="Site team carrying out work" loading="lazy">
+      <figcaption>Team at work</figcaption>
+    </figure>
+  </div>
+</div>

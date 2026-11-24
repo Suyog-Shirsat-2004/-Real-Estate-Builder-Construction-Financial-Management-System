@@ -1,0 +1,30 @@
+<header class="app-topbar">
+  <button class="btn btn-light border-0 me-2 d-lg-none" type="button" id="sidebarToggle" aria-label="Toggle sidebar">
+    <i class="bi bi-list fs-5"></i>
+  </button>
+  <div class="topbar-title">
+    <h5 class="mb-0">{% block topbar_title %}{{ title|default:"Dashboard" }}{% endblock %}</h5>
+    <small class="text-muted d-none d-sm-inline">Construction &amp; Financial Management System</small>
+  </div>
+  <div class="ms-auto d-flex align-items-center gap-2">
+    <a class="btn btn-outline-secondary btn-sm d-none d-sm-inline-flex" href="{% url 'home' %}">
+      <i class="bi bi-house-door me-1"></i> Main Site
+    </a>
+    <div class="dropdown">
+      <button class="btn btn-light border position-relative" type="button" data-bs-toggle="dropdown" aria-label="Notifications">
+        <i class="bi bi-bell"></i>
+        {% if unread_count %}<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ unread_count }}</span>{% endif %}
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end notification-menu">
+        <li><h6 class="dropdown-header">Recent Notifications</h6></li>
+        {% for note in global_notifications %}
+          <li><a class="dropdown-item small" href="#">{{ note.title }}</a></li>
+        {% empty %}
+          <li><span class="dropdown-item-text small text-muted">No notifications</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <span class="small fw-semibold text-secondary d-none d-md-inline">Admin</span>
+    <div class="topbar-avatar" title="Admin"><i class="bi bi-person-circle"></i></div>
+  </div>
+</header>

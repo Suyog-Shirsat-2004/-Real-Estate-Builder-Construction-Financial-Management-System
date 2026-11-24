@@ -1,0 +1,28 @@
+{% extends "ConstructionManagement/base_manager.html" %}
+{% block title %}Quality &amp; Safety{% endblock %}
+
+{% block app_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <div><h4 class="fw-bold mb-1">Quality &amp; Safety</h4><p class="text-muted small mb-0">Inspection records for all active sites.</p></div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'manager_add' 'quality' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Quality Inspection</a>
+    <a href="{% url 'manager_add' 'safety' %}" class="btn btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Safety Inspection</a>
+  </div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100"><div class="card-header bg-white fw-semibold"><i class="bi bi-clipboard-check me-2 text-success"></i>Quality Inspections</div>
+      <div class="table-responsive"><table class="table table-sm mb-0"><thead class="table-light"><tr><th>Date</th><th>Site</th><th>Area</th><th>Score</th><th>Status</th></tr></thead><tbody>
+      {% for item in quality %}<tr><td>{{ item.inspection_date|date:"M d" }}</td><td>{{ item.site.name }}</td><td>{{ item.area }}</td><td>{{ item.score }}</td><td><span class="badge bg-success">Done</span></td></tr>{% endfor %}
+      </tbody></table></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100"><div class="card-header bg-white fw-semibold"><i class="bi bi-shield-exclamation me-2 text-danger"></i>Safety Inspections</div>
+      <div class="table-responsive"><table class="table table-sm mb-0"><thead class="table-light"><tr><th>Date</th><th>Site</th><th>Area</th><th>Score</th><th>Status</th></tr></thead><tbody>
+      {% for item in safety %}<tr><td>{{ item.inspection_date|date:"M d" }}</td><td>{{ item.site.name }}</td><td>{{ item.area }}</td><td>{{ item.score }}</td><td><span class="badge bg-{% if item.status == 'DELAYED' %}danger{% else %}primary{% endif %}">{{ item.get_status_display }}</span></td></tr>{% endfor %}
+      </tbody></table></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

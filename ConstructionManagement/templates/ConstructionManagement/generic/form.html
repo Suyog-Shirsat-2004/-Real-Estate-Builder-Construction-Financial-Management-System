@@ -1,0 +1,45 @@
+{% extends base_template %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block app_content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0">{{ title }}</h4>
+      <a href="{% if module == 'manager' %}{% url 'manager_crud_list' resource_key %}{% else %}{% url 'supervisor_crud_list' resource_key %}{% endif %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Back</a>
+    </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            <div class="fw-semibold mb-1"><i class="bi bi-exclamation-triangle me-1"></i>Please correct the highlighted fields:</div>
+            <ul class="mb-0 small">
+              {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+              {% for field in form %}{% for error in field.errors %}<li><strong>{{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          <div class="row g-3">
+            {% for field in form %}
+              <div class="col-md-6 {% if field.field.widget.input_type == 'checkbox' %}d-flex align-items-end{% endif %}">
+                <label for="{{ field.id_for_label }}" class="form-label small fw-semibold">
+                  {{ field.label }}{% if field.field.required %}<span class="text-danger ms-1">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-{% if module == 'manager' %}primary{% else %}success{% endif %}"><i class="bi bi-save me-1"></i>Save {{ resource.singular }}</button>
+            <a href="{% if module == 'manager' %}{% url 'manager_crud_list' resource_key %}{% else %}{% url 'supervisor_crud_list' resource_key %}{% endif %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

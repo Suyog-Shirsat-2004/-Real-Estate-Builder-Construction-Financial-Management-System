@@ -1,0 +1,10 @@
+{% extends "ConstructionManagement/base.html" %}
+{% comment %}Dedicated base for every Site Supervisor screen.{% endcomment %}
+{% block extra_css %}
+  {{ block.super }}
+  <style>
+    .app-sidebar { --reb-module-accent: #198754; }
+    .sidebar-role { color: #8fdcb1; }
+    .sidebar-nav .nav-link.active { background: var(--reb-module-accent); }
+  </style>
+{% endblock %}

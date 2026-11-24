@@ -1,0 +1,92 @@
+{% extends "ConstructionManagement/base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block public_content %}
+<div class="hero-section">
+  <div class="container py-5">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <span class="badge bg-light text-primary mb-3">Construction &amp; Financial Management</span>
+        <h1 class="display-5 fw-bold">Build smarter with Real Estate Builder</h1>
+        <p class="lead text-light">
+          One centralized workspace for site managers and site supervisors to plan projects,
+          track daily progress, manage labour and materials, and control budgets.
+        </p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <a href="{% url 'manager_dashboard' %}" class="btn btn-light btn-lg"><i class="bi bi-briefcase me-2"></i>Open Site Manager</a>
+          <a href="{% url 'supervisor_dashboard' %}" class="btn btn-outline-light btn-lg"><i class="bi bi-hardhat me-2"></i>Open Site Supervisor</a>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="hero-visual">
+          <img src="{% static 'images/site-supervisor-1.webp' %}" alt="Construction site supervisor reviewing work" class="hero-image">
+          <div class="hero-visual-caption"><i class="bi bi-camera-video me-2"></i>Live from the construction site</div>
+        </div>
+        <div class="row g-3 hero-stats">
+          <div class="col-6"><div class="hero-stat"><strong>{{ projects_count }}</strong><span>Projects</span></div></div>
+          <div class="col-6"><div class="hero-stat"><strong>{{ sites_count }}</strong><span>Sites</span></div></div>
+          <div class="col-6"><div class="hero-stat"><strong>{{ active_sites }}</strong><span>Active Sites</span></div></div>
+          <div class="col-6"><div class="hero-stat"><strong>{{ workers_count }}</strong><span>Workers</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">Choose your workspace</h2>
+    <p class="text-muted">Both modules share one central database. No login is required during development.</p>
+  </div>
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card module-card h-100 shadow-sm border-0 overflow-hidden">
+        <div class="module-card-media">
+          <img src="{% static 'images/site-manager-1.webp' %}" alt="Site manager planning a construction project">
+        </div>
+        <div class="module-card-badge bg-primary"><i class="bi bi-briefcase-fill"></i></div>
+        <div class="card-body p-4">
+          <h3 class="card-title fw-bold">Site Manager Dashboard</h3>
+          <p class="card-text text-muted">
+            Manage projects, sites, activities, contractors, materials, labour, budgets,
+            approvals and progress reports from one command center.
+          </p>
+          <ul class="list-unstyled small text-muted mb-4">
+            <li><i class="bi bi-check2-circle text-primary me-2"></i>Project-wise progress and expense charts</li>
+            <li><i class="bi bi-check2-circle text-primary me-2"></i>Approvals, deadlines and notifications</li>
+            <li><i class="bi bi-check2-circle text-primary me-2"></i>Full CRUD for every management record</li>
+          </ul>
+          <a href="{% url 'manager_dashboard' %}" class="btn btn-primary">View Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-5">
+      <div class="card module-card h-100 shadow-sm border-0 overflow-hidden">
+        <div class="module-card-media">
+          <img src="{% static 'images/site-supervisor-2.webp' %}" alt="Site supervisor managing daily site work">
+        </div>
+        <div class="module-card-badge bg-success"><i class="bi bi-hardhat"></i></div>
+        <div class="card-body p-4">
+          <h3 class="card-title fw-bold">Site Supervisor Dashboard</h3>
+          <p class="card-text text-muted">
+            Record daily work, attendance, material movement, site photos, issues and
+            progress reports directly from the field on any device.
+          </p>
+          <ul class="list-unstyled small text-muted mb-4">
+            <li><i class="bi bi-check2-circle text-success me-2"></i>Today's work and labour summary</li>
+            <li><i class="bi bi-check2-circle text-success me-2"></i>Quick actions for field reporting</li>
+            <li><i class="bi bi-check2-circle text-success me-2"></i>Mobile-friendly responsive layout</li>
+          </ul>
+          <a href="{% url 'supervisor_dashboard' %}" class="btn btn-success">View Dashboard <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-5 pt-0">
+  {% include "ConstructionManagement/partials/_site_gallery.html" with gallery_title="Latest from the sites" %}
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% for kpi in kpis %}
+  {% if module == 'supervisor' %}
+    {% url 'supervisor_dashboard_detail' kpi.section as detail_url %}
+  {% else %}
+    {% url 'manager_dashboard_detail' kpi.section as detail_url %}
+  {% endif %}
+  <div class="col-6 col-md-4 col-xl-3">
+    <div class="card kpi-card detail-card border-0 shadow-sm h-100"
+         role="button" tabindex="0"
+         data-detail-url="{{ detail_url }}"
+         data-detail-title="{{ kpi.label }}"
+         title="Click to view complete details">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="kpi-icon bg-{{ kpi.color }} bg-opacity-10 text-{{ kpi.color }}">
+          <i class="bi {{ kpi.icon }}"></i>
+        </div>
+        <div class="overflow-hidden flex-grow-1">
+          <div class="kpi-value">{{ kpi.value }}</div>
+          <div class="kpi-label text-truncate">{{ kpi.label }}</div>
+        </div>
+        <i class="bi bi-arrow-up-right detail-card-arrow text-muted"></i>
+      </div>
+    </div>
+  </div>
+{% endfor %}

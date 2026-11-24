@@ -1,0 +1,50 @@
+<div class="app-sidebar" id="appSidebar">
+  <div class="sidebar-brand">
+    <a href="{% url 'home' %}" class="text-white text-decoration-none">
+      <i class="bi bi-buildings-fill me-2"></i>
+      <span>Real Estate Builder</span>
+    </a>
+    <button class="btn btn-sm btn-outline-light d-lg-none float-end sidebar-close" type="button" id="sidebarClose">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  {% if module == 'manager' %}
+    <div class="sidebar-role"><i class="bi bi-briefcase me-2"></i>Site Manager Module</div>
+    <ul class="nav flex-column sidebar-nav">
+      <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'manager_dashboard' %}active{% endif %}" href="{% url 'manager_dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_projects' %}"><i class="bi bi-diagram-3 me-2"></i>Project Management</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_sites' %}"><i class="bi bi-geo-alt me-2"></i>Site Management</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_activities' %}"><i class="bi bi-list-check me-2"></i>Construction Activities</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_contractors' %}"><i class="bi bi-people me-2"></i>Contractor Management</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_materials' %}"><i class="bi bi-box-seam me-2"></i>Material Management</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_labour' %}"><i class="bi bi-person-badge me-2"></i>Labour Management</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_finance' %}"><i class="bi bi-cash-coin me-2"></i>Budget &amp; Expenses</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_dpr' %}"><i class="bi bi-file-earmark-text me-2"></i>Daily Progress Reports</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_timeline' %}"><i class="bi bi-calendar-range me-2"></i>Project Timeline</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_quality_safety' %}"><i class="bi bi-shield-check me-2"></i>Quality &amp; Safety</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_reports' %}"><i class="bi bi-bar-chart-line me-2"></i>Reports</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_notifications' %}"><i class="bi bi-bell me-2"></i>Notifications <span class="badge bg-danger">{{ unread_count }}</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'manager_settings' %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
+    </ul>
+  {% else %}
+    <div class="sidebar-role"><i class="bi bi-hardhat me-2"></i>Site Supervisor Module</div>
+    <ul class="nav flex-column sidebar-nav">
+      <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'supervisor_dashboard' %}active{% endif %}" href="{% url 'supervisor_dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_assigned_sites' %}"><i class="bi bi-geo-alt me-2"></i>My Assigned Sites</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_work_updates' %}"><i class="bi bi-list-check me-2"></i>Daily Work Updates</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_attendance' %}"><i class="bi bi-person-check me-2"></i>Labour Attendance</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_materials' %}"><i class="bi bi-box-seam me-2"></i>Material Consumption</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_receiving' %}"><i class="bi bi-box-arrow-in-down me-2"></i>Material Receiving</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_photos' %}"><i class="bi bi-camera me-2"></i>Construction Photos</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_dpr' %}"><i class="bi bi-file-earmark-text me-2"></i>Daily Progress Report</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_issues' %}"><i class="bi bi-exclamation-circle me-2"></i>Site Issues</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_quality_checklist' %}"><i class="bi bi-clipboard-check me-2"></i>Quality Checklist</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_safety_checklist' %}"><i class="bi bi-shield-exclamation me-2"></i>Safety Checklist</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_reports' %}"><i class="bi bi-bar-chart-line me-2"></i>Reports</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_notifications' %}"><i class="bi bi-bell me-2"></i>Notifications <span class="badge bg-danger">{{ unread_count }}</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_settings' %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
+    </ul>
+  {% endif %}
+</div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>

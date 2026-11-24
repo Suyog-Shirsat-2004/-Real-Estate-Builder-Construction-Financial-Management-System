@@ -1,0 +1,98 @@
+{% extends "ConstructionManagement/base_supervisor.html" %}
+{% load static %}
+{% block title %}Site Supervisor Dashboard{% endblock %}
+
+{% block app_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Site Supervisor Dashboard</h4>
+    <p class="text-muted small mb-0">Today's field activity, labour, materials and reporting at a glance.</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'supervisor_add' 'dpr' %}" class="btn btn-success"><i class="bi bi-plus-lg me-1"></i>Submit DPR</a>
+    <a href="{% url 'supervisor_add' 'issue' %}" class="btn btn-outline-danger"><i class="bi bi-exclamation-circle me-1"></i>Report Issue</a>
+    <a href="{% url 'supervisor_add' 'photo' %}" class="btn btn-outline-primary"><i class="bi bi-camera me-1"></i>Upload Photo</a>
+  </div>
+</div>
+
+<div class="welcome-banner supervisor reveal">
+  <div class="welcome-copy">
+    <span class="badge bg-light text-success mb-2">FIELD WORKSPACE</span>
+    <h5>Good morning, Supervisor</h5>
+    <p>Your site activity, attendance, materials and reports are up to date.</p>
+  </div>
+  <div class="welcome-images">
+    <img src="{% static 'images/site-supervisor-3.webp' %}" alt="Site supervisor with site team">
+    <img src="{% static 'images/site-supervisor-4.webp' %}" alt="Construction site inspection">
+  </div>
+</div>
+
+<div class="row g-3 mb-4">{% include "ConstructionManagement/partials/_kpis.html" %}</div>
+
+<div class="row g-4">
+  <div class="col-xl-7">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Daily Progress Trend" data-detail-url="{% url 'supervisor_dashboard_detail' 'progress_chart' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-graph-up me-2 text-success"></i>Daily Progress Trend</div>
+      <div class="card-body"><canvas id="supervisorProgressChart" height="130"></canvas></div>
+    </div>
+  </div>
+  <div class="col-xl-5">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Assigned Sites" data-detail-url="{% url 'supervisor_dashboard_detail' 'assigned_sites' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-geo-alt me-2"></i>Assigned Sites</div>
+      <ul class="list-group list-group-flush small">{% for site in assigned_sites %}<li class="list-group-item d-flex justify-content-between"><a href="{% url 'supervisor_detail' 'site' site.pk %}" class="text-decoration-none">{{ site.name }}</a><span class="badge bg-light text-dark">{{ site.progress }}%</span></li>{% endfor %}</ul>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-xl-6">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Assigned Activities" data-detail-url="{% url 'supervisor_dashboard_detail' 'activities' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-list-check me-2"></i>Assigned Activities</div>
+      <ul class="list-group list-group-flush small">{% for activity in activities %}<li class="list-group-item d-flex justify-content-between"><span>{{ activity.title }}</span><span class="badge bg-{% if activity.status == 'ACTIVE' %}primary{% elif activity.status == 'COMPLETED' %}success{% else %}secondary{% endif %}">{{ activity.get_status_display }}</span></li>{% endfor %}</ul>
+    </div>
+  </div>
+  <div class="col-xl-6">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Recent Construction Photos" data-detail-url="{% url 'supervisor_dashboard_detail' 'recent_photos' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-camera me-2"></i>Recent Construction Photos</div>
+      <div class="card-body">
+        <div class="row g-2">{% for photo in recent_photos %}<div class="col-4"><img src="{{ photo.image.url }}" class="img-fluid rounded w-100" style="height:90px;object-fit:cover" alt="{{ photo.title }}" title="{{ photo.title }}"></div>{% empty %}<div class="col-12 text-muted small">No photos uploaded yet.</div>{% endfor %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Pending Tasks" data-detail-url="{% url 'supervisor_dashboard_detail' 'pending_tasks' %}"><div class="card-header bg-white fw-semibold"><i class="bi bi-hourglass me-2"></i>Pending Tasks</div>
+      <ul class="list-group list-group-flush small">{% for task in pending_tasks %}<li class="list-group-item">{{ task.title }}<div class="text-muted">{{ task.site.name }}</div></li>{% empty %}<li class="list-group-item text-muted">No pending tasks</li>{% endfor %}</ul></div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Site Issue Alerts" data-detail-url="{% url 'supervisor_dashboard_detail' 'issue_alerts' %}"><div class="card-header bg-white fw-semibold"><i class="bi bi-exclamation-triangle me-2 text-danger"></i>Site Issue Alerts</div>
+      <ul class="list-group list-group-flush small">{% for issue in issue_alerts %}<li class="list-group-item d-flex justify-content-between"><span>{{ issue.title }}</span><span class="badge bg-warning text-dark">{{ issue.severity }}</span></li>{% empty %}<li class="list-group-item text-muted">No open issues</li>{% endfor %}</ul></div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm reveal h-100"><div class="card-header bg-white fw-semibold"><i class="bi bi-lightning-charge me-2"></i>Quick Actions</div>
+      <div class="card-body d-grid gap-2">
+        <a href="{% url 'supervisor_add' 'attendance' %}" class="btn btn-sm btn-outline-success"><i class="bi bi-person-check me-1"></i>Mark Attendance</a>
+        <a href="{% url 'supervisor_add' 'material_transaction' %}" class="btn btn-sm btn-outline-info"><i class="bi bi-box-seam me-1"></i>Record Material</a>
+        <a href="{% url 'supervisor_add' 'activity' %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-list-check me-1"></i>Update Work</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  {% include "ConstructionManagement/partials/_site_gallery.html" with gallery_mode="compact" gallery_title="Site Gallery" %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const progressData = {{ progress_chart|safe }};
+new Chart(document.getElementById('supervisorProgressChart'), {
+  type: 'line',
+  data: { labels: progressData.labels, datasets: [{ label: 'Progress %', data: progressData.values, borderColor: '#198754', backgroundColor: 'rgba(25,135,84,.15)', fill: true, tension: .3 }] },
+  options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+});
+</script>
+{% endblock %}

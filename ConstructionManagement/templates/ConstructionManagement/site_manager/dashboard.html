@@ -1,0 +1,144 @@
+{% extends "ConstructionManagement/base_manager.html" %}
+{% load static %}
+{% block title %}Site Manager Dashboard{% endblock %}
+
+{% block app_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-1">Site Manager Dashboard</h4>
+    <p class="text-muted mb-0 small">Complete overview of projects, sites, activities, finance and approvals.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'manager_add' 'project' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>New Project</a>
+    <a href="{% url 'manager_reports' %}" class="btn btn-outline-primary"><i class="bi bi-file-earmark-bar-graph me-1"></i>Reports</a>
+  </div>
+</div>
+
+<div class="welcome-banner reveal">
+  <div class="welcome-copy">
+    <span class="badge bg-light text-primary mb-2">COMMAND CENTER</span>
+    <h5>Welcome back, Rahul</h5>
+    <p>Here is what is happening across your projects and sites today.</p>
+  </div>
+  <div class="welcome-images">
+    <img src="{% static 'images/site-manager-2.webp' %}" alt="Project planning">
+    <img src="{% static 'images/site-manager-3.webp' %}" alt="Site manager on site">
+    <img src="{% static 'images/site-manager-4.webp' %}" alt="Construction team meeting">
+  </div>
+</div>
+
+<div class="row g-3 mb-4">{% include "ConstructionManagement/partials/_kpis.html" %}</div>
+
+<div class="row g-4">
+  <div class="col-xl-8">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Project-wise Progress" data-detail-url="{% url 'manager_dashboard_detail' 'project_progress' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-bar-chart-line me-2 text-primary"></i>Project-wise Progress</div>
+      <div class="card-body"><canvas id="projectProgressChart" height="120"></canvas></div>
+    </div>
+  </div>
+  <div class="col-xl-4">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Activity Status" data-detail-url="{% url 'manager_dashboard_detail' 'activity_status' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-pie-chart me-2 text-success"></i>Activity Status</div>
+      <div class="card-body"><canvas id="activityStatusChart" height="220"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-xl-6">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Monthly Expense Trend" data-detail-url="{% url 'manager_dashboard_detail' 'monthly_expense' %}">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-cash-stack me-2 text-warning"></i>Monthly Expense Trend</span>
+      </div>
+      <div class="card-body"><canvas id="monthlyExpenseChart" height="150"></canvas></div>
+    </div>
+  </div>
+  <div class="col-xl-6">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Projects" data-detail-url="{% url 'manager_dashboard_detail' 'projects_table' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-kanban me-2 text-info"></i>Projects</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0"><thead class="table-light"><tr><th>Project</th><th>Status</th><th>Progress</th></tr></thead>
+          <tbody>{% for project in projects %}<tr>
+            <td><a href="{% url 'manager_detail' 'project' project.pk %}" class="small text-decoration-none">{{ project.name }}</a></td>
+            <td><span class="badge bg-{% if project.status == 'ACTIVE' %}primary{% elif project.status == 'COMPLETED' %}success{% elif project.status == 'DELAYED' %}danger{% else %}secondary{% endif %}">{{ project.get_status_display }}</span></td>
+            <td><div class="progress" style="height:6px"><div class="progress-bar" style="width:{{ project.progress }}%"></div></div><small>{{ project.progress }}%</small></td>
+          </tr>{% endfor %}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-xl-4">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Recent Activities" data-detail-url="{% url 'manager_dashboard_detail' 'recent_activities' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-list-check me-2"></i>Recent Activities</div>
+      <ul class="list-group list-group-flush small">
+        {% for activity in recent_activities %}<li class="list-group-item d-flex justify-content-between"><span>{{ activity.title }}</span><span class="badge bg-light text-dark">{{ activity.get_status_display }}</span></li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-xl-4">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Pending Approvals" data-detail-url="{% url 'manager_dashboard_detail' 'pending_approvals' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-check2-square me-2"></i>Pending Approvals</div>
+      <ul class="list-group list-group-flush small">
+        {% for dpr in pending_approvals %}<li class="list-group-item d-flex justify-content-between"><a href="{% url 'manager_detail' 'dpr' dpr.pk %}" class="text-decoration-none">{{ dpr.site.name }} - {{ dpr.date }}</a><span class="badge bg-warning text-dark">Pending</span></li>{% empty %}<li class="list-group-item text-muted">No pending approvals</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-xl-4">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Recent Notifications" data-detail-url="{% url 'manager_dashboard_detail' 'recent_notifications' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-bell me-2"></i>Recent Notifications</div>
+      <ul class="list-group list-group-flush small">
+        {% for note in recent_notifications %}<li class="list-group-item">{{ note.title }}<div class="text-muted">{{ note.created_at|date:"M d, Y" }}</div></li>{% empty %}<li class="list-group-item text-muted">No notifications</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Upcoming Deadlines" data-detail-url="{% url 'manager_dashboard_detail' 'upcoming_deadlines' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-calendar-week me-2"></i>Upcoming Deadlines</div>
+      <ul class="list-group list-group-flush small">
+        {% for m in upcoming_deadlines %}<li class="list-group-item d-flex justify-content-between"><span>{{ m.title }}</span><span class="text-muted">{{ m.due_date|date:"M d" }}</span></li>{% empty %}<li class="list-group-item text-muted">No upcoming deadlines</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100 detail-card" role="button" tabindex="0" title="Click to view complete details" data-detail-title="Low Material Stock" data-detail-url="{% url 'manager_dashboard_detail' 'low_materials' %}">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-exclamation-triangle me-2"></i>Low Material Stock</div>
+      <ul class="list-group list-group-flush small">
+        {% for material in low_materials %}<li class="list-group-item d-flex justify-content-between"><span>{{ material.name }}</span><span class="badge bg-warning text-dark">{{ material.quantity_in_stock }} {{ material.unit }}</span></li>{% empty %}<li class="list-group-item text-muted">All materials are adequately stocked</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  {% include "ConstructionManagement/partials/_site_gallery.html" with gallery_mode="compact" gallery_title="Site Gallery" %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const projectData = {{ project_chart|safe }};
+const activityData = {{ activity_chart|safe }};
+const expenseData = {{ expense_chart|safe }};
+new Chart(document.getElementById('projectProgressChart'), {
+  type: 'bar',
+  data: { labels: projectData.labels, datasets: [{ label: 'Progress %', data: projectData.values, backgroundColor: '#0d6efd', borderRadius: 5 }] },
+  options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
+});
+new Chart(document.getElementById('activityStatusChart'), {
+  type: 'doughnut',
+  data: { labels: activityData.labels, datasets: [{ data: activityData.values, backgroundColor: ['#6c757d','#0d6efd','#198754','#ffc107','#dc3545','#6f42c1','#0dcaf0'] }] },
+  options: { responsive: true, maintainAspectRatio: false }
+});
+new Chart(document.getElementById('monthlyExpenseChart'), {
+  type: 'line',
+  data: { labels: expenseData.labels, datasets: [{ label: 'Expense', data: expenseData.values, borderColor: '#fd7e14', backgroundColor: 'rgba(253,126,20,.15)', fill: true, tension: .3 }] },
+  options: { responsive: true, scales: { y: { beginAtZero: true } } }
+});
+</script>
+{% endblock %}

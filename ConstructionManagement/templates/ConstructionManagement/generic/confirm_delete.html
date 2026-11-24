@@ -1,0 +1,21 @@
+{% extends base_template %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block app_content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-5 text-center">
+        <i class="bi bi-exclamation-triangle display-4 text-danger"></i>
+        <h4 class="fw-bold mt-3">Delete {{ resource.singular }}?</h4>
+        <p class="text-muted">You are about to permanently delete <strong>{{ object }}</strong>. This action cannot be undone.</p>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Yes, delete</button>
+          <a href="{% if module == 'manager' %}{% url 'manager_crud_list' resource_key %}{% else %}{% url 'supervisor_crud_list' resource_key %}{% endif %}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

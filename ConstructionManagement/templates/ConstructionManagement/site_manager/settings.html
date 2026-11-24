@@ -1,0 +1,28 @@
+{% extends "ConstructionManagement/base_manager.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block app_content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h4 class="fw-bold mb-4">Settings</h4>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-sliders me-2"></i>Display Preferences</div>
+      <div class="card-body">
+        <p class="text-muted small">Authentication and role-based permissions will be added in a later phase. These preferences are stored in your current session.</p>
+        <form method="post">{% csrf_token %}
+          <div class="mb-3"><label class="form-label small fw-semibold">Table density</label>
+            <select name="density" class="form-select">
+              <option value="comfortable" {% if density == 'comfortable' %}selected{% endif %}>Comfortable</option>
+              <option value="compact" {% if density == 'compact' %}selected{% endif %}>Compact</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit"><i class="bi bi-save me-1"></i>Save Preferences</button>
+        </form>
+      </div>
+    </div>
+    <div class="card border-0 shadow-sm mt-4"><div class="card-body small text-muted">
+      <strong>Database:</strong> SQLite (db.sqlite3) &nbsp;|&nbsp; <strong>Frontend:</strong> Bootstrap 5, Bootstrap Icons, Chart.js &nbsp;|&nbsp; <strong>Backend:</strong> Django {{ django_version|default:"6.x" }}
+    </div></div>
+  </div>
+</div>
+{% endblock %}

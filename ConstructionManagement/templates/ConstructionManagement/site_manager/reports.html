@@ -1,0 +1,44 @@
+{% extends "ConstructionManagement/base_manager.html" %}
+{% block title %}Reports{% endblock %}
+
+{% block app_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div><h4 class="fw-bold mb-1">Reports</h4><p class="text-muted small mb-0">Consolidated project, DPR, expense and issue reports.</p></div>
+  <a href="{% url 'manager_reports' %}" class="btn btn-outline-primary"><i class="bi bi-arrow-clockwise me-1"></i>Refresh</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-diagram-3 me-2"></i>Project-wise Summary</div>
+      <div class="table-responsive"><table class="table table-sm mb-0"><thead class="table-light"><tr><th>Project</th><th>Status</th><th>Budget</th><th>Progress</th></tr></thead><tbody>
+        {% for project in projects %}<tr><td>{{ project.name }}</td><td>{{ project.get_status_display }}</td><td>&#8377;{{ project.budget|floatformat:0 }}</td><td>{{ project.progress }}%</td></tr>{% endfor %}
+      </tbody></table></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-cash-coin me-2"></i>Expense Summary</div>
+      <div class="card-body"><div class="fs-3 fw-bold text-primary">&#8377;{{ total_expense|floatformat:0 }}</div><p class="text-muted small">Total recorded expenditure across all projects.</p></div>
+      <div class="table-responsive"><table class="table table-sm mb-0"><thead class="table-light"><tr><th>Category</th><th>Amount</th><th>Date</th></tr></thead><tbody>
+        {% for expense in expenses %}<tr><td>{{ expense.category }}</td><td>&#8377;{{ expense.amount|floatformat:0 }}</td><td>{{ expense.date|date:"M d" }}</td></tr>{% endfor %}
+      </tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-file-earmark-text me-2"></i>Recent DPRs</div>
+      <ul class="list-group list-group-flush small">{% for dpr in dprs %}<li class="list-group-item d-flex justify-content-between"><a href="{% url 'manager_detail' 'dpr' dpr.pk %}" class="text-decoration-none">{{ dpr.site.name }} - {{ dpr.date }}</a><span class="badge bg-light text-dark">{{ dpr.get_status_display }}</span></li>{% endfor %}</ul>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm reveal h-100">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-exclamation-circle me-2"></i>Site Issues</div>
+      <ul class="list-group list-group-flush small">{% for issue in issues %}<li class="list-group-item d-flex justify-content-between"><span>{{ issue.title }}</span><span class="badge bg-warning text-dark">{{ issue.severity }}</span></li>{% endfor %}</ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

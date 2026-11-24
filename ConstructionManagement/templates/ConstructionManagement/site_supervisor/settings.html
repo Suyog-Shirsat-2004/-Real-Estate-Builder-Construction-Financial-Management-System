@@ -1,0 +1,22 @@
+{% extends "ConstructionManagement/base_supervisor.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block app_content %}
+<div class="row justify-content-center"><div class="col-lg-8">
+  <h4 class="fw-bold mb-4">Settings</h4>
+  <div class="card border-0 shadow-sm"><div class="card-header bg-white fw-semibold"><i class="bi bi-sliders me-2"></i>Display Preferences</div>
+    <div class="card-body">
+      <p class="text-muted small">Preferences apply to your current session. Role-based access will be introduced in a later phase.</p>
+      <form method="post">{% csrf_token %}
+        <div class="mb-3"><label class="form-label small fw-semibold">Table density</label>
+          <select name="density" class="form-select">
+            <option value="comfortable" {% if density == 'comfortable' %}selected{% endif %}>Comfortable</option>
+            <option value="compact" {% if density == 'compact' %}selected{% endif %}>Compact</option>
+          </select>
+        </div>
+        <button class="btn btn-success" type="submit"><i class="bi bi-save me-1"></i>Save Preferences</button>
+      </form>
+    </div>
+  </div>
+</div></div>
+{% endblock %}

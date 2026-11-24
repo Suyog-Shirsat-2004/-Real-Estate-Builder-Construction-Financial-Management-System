@@ -1,0 +1,59 @@
+{% extends "ConstructionManagement/base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block public_content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="text-center mb-5">
+        <i class="bi bi-buildings-fill display-4 text-primary"></i>
+        <h1 class="fw-bold mt-3">About Real Estate Builder</h1>
+        <p class="lead text-muted">Construction &amp; Financial Management System for Site Managers and Site Supervisors.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <i class="bi bi-bullseye fs-2 text-primary"></i>
+              <h5 class="fw-bold mt-3">Our Purpose</h5>
+              <p class="text-muted small">Bring project planning, site execution, labour, materials and finance into one reliable source of truth.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <i class="bi bi-diagram-3 fs-2 text-success"></i>
+              <h5 class="fw-bold mt-3">Two Modules</h5>
+              <p class="text-muted small">A Site Manager module for control and approvals, and a Site Supervisor module for daily field reporting.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <i class="bi bi-database fs-2 text-warning"></i>
+              <h5 class="fw-bold mt-3">One Database</h5>
+              <p class="text-muted small">Both dashboards work against a single SQLite database with live Django models and CRUD operations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% include "ConstructionManagement/partials/_site_gallery.html" with gallery_title="Our work in progress" %}
+
+      <div class="card border-0 shadow-sm mt-5" id="contact">
+        <div class="card-body p-4">
+          <h4 class="fw-bold">Contact</h4>
+          <p class="text-muted mb-1"><i class="bi bi-envelope me-2"></i>support@realestatebuilder.example</p>
+          <p class="text-muted mb-1"><i class="bi bi-telephone me-2"></i>+91 80 4567 8900</p>
+          <p class="text-muted mb-0"><i class="bi bi-geo-alt me-2"></i>Bengaluru, Karnataka, India</p>
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <a href="{% url 'home' %}" class="btn btn-primary"><i class="bi bi-house-door me-2"></i>Back to Home</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
