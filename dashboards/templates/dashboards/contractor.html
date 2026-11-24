@@ -1,0 +1,48 @@
+{% extends "dashboards/base_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="row g-3">
+  <div class="col-6 col-lg-3" data-aos="fade-up"><div class="reb-kpi"><i class="bi bi-briefcase"></i><strong>{{ stats.contractors }}</strong><span>Contractors</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="50"><div class="reb-kpi"><i class="bi bi-cash-coin"></i><strong>&#8377;{{ contract_value|floatformat:0 }}</strong><span>Total Contract Value</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="100"><div class="reb-kpi"><i class="bi bi-geo-alt"></i><strong>{{ stats.sites }}</strong><span>Sites</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="150"><div class="reb-kpi"><i class="bi bi-list-check"></i><strong>{{ stats.activities }}</strong><span>Activities</span></div></div>
+</div>
+
+<div class="reb-panel mt-4" data-aos="fade-up">
+  <div class="reb-panel-head"><h5><i class="bi bi-info-circle me-2"></i>Your Workspace</h5><a class="small text-decoration-none" href="{% url 'home' %}">Visit Main Site</a></div>
+  <div class="reb-panel-body">
+    <div class="row g-3">
+      <div class="col-md-6"><a class="reb-action" href="#contractors"><i class="bi bi-people"></i><div><strong>Contractor Directory</strong><small>View registered contractors and contracts</small></div></a></div>
+      <div class="col-md-6"><a class="reb-action" href="#assignments"><i class="bi bi-calendar-check"></i><div><strong>Assignments</strong><small>Site work linked to contractors</small></div></a></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-7" data-aos="fade-up">
+    <div class="reb-panel h-100" id="contractors">
+      <div class="reb-panel-head"><h5><i class="bi bi-people me-2"></i>Contractor Directory</h5><span class="small text-muted">Read-only &middot; managed by Builder / Admin</span></div>
+      <div class="reb-panel-body table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead><tr><th>Name</th><th>Company</th><th>Specialty</th><th class="text-end">Value</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for contractor in contractors %}
+              <tr><td class="fw-semibold">{{ contractor.name }}</td><td>{{ contractor.company|default:"&mdash;" }}</td><td>{{ contractor.specialty|default:"&mdash;" }}</td><td class="text-end">&#8377;{{ contractor.contract_value|floatformat:0 }}</td><td><span class="badge bg-light text-dark">{{ contractor.get_status_display }}</span></td></tr>
+            {% empty %}<tr><td colspan="5" class="reb-empty">No contractor records yet.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100" id="assignments">
+      <div class="reb-panel-head"><h5><i class="bi bi-briefcase me-2"></i>Recent Assignments</h5></div>
+      <div class="reb-panel-body">
+        {% for activity in activities %}
+          <div class="reb-list-item"><i class="bi bi-check2-square"></i><div><strong>{{ activity.title }}</strong><br><small class="text-muted">{{ activity.site.name }} &middot; {{ activity.contractor.name }}</small></div><span class="ms-auto small">{{ activity.progress }}%</span></div>
+        {% empty %}<div class="reb-empty">No contractor assignments recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

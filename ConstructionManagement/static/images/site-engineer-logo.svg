@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Site Engineer logo">
+  <rect x="4" y="4" width="88" height="88" rx="22" fill="#0a1b33"/>
+  <rect x="8" y="8" width="80" height="80" rx="18" fill="none" stroke="#d4af37" stroke-width="3"/>
+  <g transform="rotate(-28 48 48)">
+    <rect x="22" y="41" width="52" height="14" rx="3" fill="#f8fafc"/>
+    <g stroke="#0a1b33" stroke-width="2" stroke-linecap="round">
+      <line x1="30" y1="41" x2="30" y2="47"/>
+      <line x1="38" y1="41" x2="38" y2="47"/>
+      <line x1="46" y1="41" x2="46" y2="47"/>
+      <line x1="54" y1="41" x2="54" y2="47"/>
+      <line x1="62" y1="41" x2="62" y2="47"/>
+      <line x1="70" y1="41" x2="70" y2="47"/>
+    </g>
+  </g>
+  <g transform="rotate(35 66 30)">
+    <rect x="62" y="14" width="8" height="28" rx="2" fill="#d4af37"/>
+    <path d="M62 42 L66 50 L70 42 Z" fill="#f8fafc"/>
+  </g>
+  <circle cx="28" cy="66" r="10" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+  <path d="M28 60 L28 66 L33 69" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

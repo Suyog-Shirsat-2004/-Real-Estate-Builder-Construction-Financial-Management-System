@@ -1,0 +1,72 @@
+{% extends "dashboards/base_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="row g-3">
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up"><div class="reb-kpi"><i class="bi bi-geo-alt"></i><strong>{{ stats.sites }}</strong><span>Sites</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="50"><div class="reb-kpi"><i class="bi bi-activity"></i><strong>{{ stats.activities }}</strong><span>Activities</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="100"><div class="reb-kpi"><i class="bi bi-graph-up"></i><strong>{{ stats.avg_progress }}%</strong><span>Avg. Site Progress</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="150"><div class="reb-kpi"><i class="bi bi-shield-check"></i><strong>{{ stats.quality_checks }}</strong><span>Quality Checks</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="200"><div class="reb-kpi"><i class="bi bi-shield-exclamation"></i><strong>{{ stats.safety_checks }}</strong><span>Safety Checks</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="250"><div class="reb-kpi"><i class="bi bi-exclamation-circle"></i><strong>{{ stats.open_issues }}</strong><span>Open Issues</span></div></div>
+</div>
+
+<div class="reb-panel mt-4" data-aos="fade-up">
+  <div class="reb-panel-head"><h5><i class="bi bi-lightning-charge me-2"></i>Engineering Workspace</h5><span class="small text-muted">Field operations access</span></div>
+  <div class="reb-panel-body">
+    <div class="row g-3">
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_dashboard' %}"><i class="bi bi-hardhat"></i><div><strong>Field Dashboard</strong><small>Site overview</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_assigned_sites' %}"><i class="bi bi-geo-alt"></i><div><strong>Sites</strong><small>Assigned locations</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_work_updates' %}"><i class="bi bi-calendar-check"></i><div><strong>Work Updates</strong><small>Daily activities</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_quality_checklist' %}"><i class="bi bi-check2-square"></i><div><strong>Quality</strong><small>Inspection records</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_safety_checklist' %}"><i class="bi bi-shield"></i><div><strong>Safety</strong><small>Compliance checks</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_reports' %}"><i class="bi bi-bar-chart-line"></i><div><strong>Reports</strong><small>Progress insights</small></div></a></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-building me-2"></i>Site Progress</h5><a class="small text-decoration-none" href="{% url 'supervisor_assigned_sites' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for site in sites %}
+          <div class="reb-list-item"><i class="bi bi-geo-alt"></i><div class="flex-grow-1"><strong>{{ site.name }}</strong><div class="progress mt-1" style="height:6px;"><div class="progress-bar bg-primary" style="width:{{ site.progress }}%"></div></div></div><span class="ms-auto small">{{ site.progress }}%</span></div>
+        {% empty %}<div class="reb-empty">No sites recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-list-check me-2"></i>Recent Activities</h5><a class="small text-decoration-none" href="{% url 'supervisor_work_updates' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for activity in activities %}
+          <div class="reb-list-item"><i class="bi bi-check2-circle"></i><div><strong>{{ activity.title }}</strong><br><small class="text-muted">{{ activity.site.name }} &middot; {{ activity.start_date|date:"d M Y" }}</small></div><span class="ms-auto badge bg-light text-dark">{{ activity.progress }}%</span></div>
+        {% empty %}<div class="reb-empty">No activities recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-clipboard2-check me-2"></i>Quality Inspections</h5></div>
+      <div class="reb-panel-body">
+        {% for item in quality %}
+          <div class="reb-list-item"><i class="bi bi-shield-check"></i><div><strong>{{ item.area|default:"Inspection" }}</strong><br><small class="text-muted">{{ item.site.name }} &middot; {{ item.inspection_date|date:"d M Y" }}</small></div><span class="ms-auto badge bg-success-subtle text-success">Score {{ item.score }}</span></div>
+        {% empty %}<div class="reb-empty">No quality inspections recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-shield-exclamation me-2"></i>Safety Inspections</h5></div>
+      <div class="reb-panel-body">
+        {% for item in safety %}
+          <div class="reb-list-item"><i class="bi bi-shield"></i><div><strong>{{ item.area|default:"Inspection" }}</strong><br><small class="text-muted">{{ item.site.name }} &middot; {{ item.inspection_date|date:"d M Y" }}</small></div><span class="ms-auto badge bg-warning-subtle text-dark">Score {{ item.score }}</span></div>
+        {% empty %}<div class="reb-empty">No safety inspections recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

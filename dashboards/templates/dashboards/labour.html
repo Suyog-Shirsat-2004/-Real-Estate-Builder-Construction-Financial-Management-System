@@ -1,0 +1,57 @@
+{% extends "dashboards/base_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="row g-3">
+  <div class="col-6 col-lg-3" data-aos="fade-up"><div class="reb-kpi"><i class="bi bi-people"></i><strong>{{ stats.workers }}</strong><span>Workers</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="50"><div class="reb-kpi"><i class="bi bi-person-check"></i><strong>{{ stats.present_today }}</strong><span>Present Today</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="100"><div class="reb-kpi"><i class="bi bi-geo-alt"></i><strong>{{ stats.sites }}</strong><span>Active Sites</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="150"><div class="reb-kpi"><i class="bi bi-calendar-check"></i><strong>{{ stats.activities }}</strong><span>Work Activities</span></div></div>
+</div>
+
+<div class="reb-panel mt-4" data-aos="fade-up">
+  <div class="reb-panel-head"><h5><i class="bi bi-info-circle me-2"></i>Your Workspace</h5><a class="small text-decoration-none" href="{% url 'home' %}">Visit Main Site</a></div>
+  <div class="reb-panel-body">
+    <div class="row g-3">
+      <div class="col-md-6"><a class="reb-action" href="#workers"><i class="bi bi-people"></i><div><strong>Worker Directory</strong><small>Team members and roles</small></div></a></div>
+      <div class="col-md-6"><a class="reb-action" href="#attendance"><i class="bi bi-person-check"></i><div><strong>Attendance</strong><small>Daily check-in records</small></div></a></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-7" data-aos="fade-up">
+    <div class="reb-panel h-100" id="workers">
+      <div class="reb-panel-head"><h5><i class="bi bi-people me-2"></i>Worker Directory</h5><span class="small text-muted">Read-only &middot; managed by site team</span></div>
+      <div class="reb-panel-body table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead><tr><th>Worker ID</th><th>Name</th><th>Role</th><th class="text-end">Daily Wage</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for worker in labour %}
+              <tr><td class="fw-semibold">{{ worker.worker_id }}</td><td>{{ worker.name }}</td><td>{{ worker.role|default:"&mdash;" }}</td><td class="text-end">&#8377;{{ worker.daily_wage|floatformat:0 }}</td><td><span class="badge bg-light text-dark">{{ worker.get_status_display }}</span></td></tr>
+            {% empty %}<tr><td colspan="5" class="reb-empty">No worker records yet.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-geo-alt me-2"></i>My Sites</h5></div>
+      <div class="reb-panel-body">
+        {% for site in sites %}
+          <div class="reb-list-item"><i class="bi bi-building"></i><div><strong>{{ site.name }}</strong><br><small class="text-muted">{{ site.location|default:"Location not specified" }}</small></div><span class="ms-auto badge bg-primary-subtle text-primary">{{ site.progress }}%</span></div>
+        {% empty %}<div class="reb-empty">No sites recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="reb-panel mt-3" id="attendance" data-aos="fade-up">
+  <div class="reb-panel-head"><h5><i class="bi bi-person-check me-2"></i>Recent Attendance</h5></div>
+  <div class="reb-panel-body">
+    {% for row in attendance %}
+      <div class="reb-list-item"><i class="bi bi-calendar3"></i><div><strong>{{ row.labour.name }}</strong><br><small class="text-muted">{{ row.date|date:"d M Y" }} &middot; {{ row.site.name|default:"&mdash;" }}</small></div><span class="ms-auto badge bg-light text-dark">{{ row.get_status_display }}</span></div>
+    {% empty %}<div class="reb-empty">No attendance records yet.</div>{% endfor %}
+  </div>
+</div>
+{% endblock %}

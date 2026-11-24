@@ -1,0 +1,67 @@
+{% extends "dashboards/base_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="row g-3">
+  <div class="col-6 col-lg-3" data-aos="fade-up"><div class="reb-kpi"><i class="bi bi-box-seam"></i><strong>{{ stats.materials }}</strong><span>Materials</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="50"><div class="reb-kpi"><i class="bi bi-exclamation-triangle"></i><strong>{{ stats.low_stock }}</strong><span>Low Stock Items</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="100"><div class="reb-kpi"><i class="bi bi-inbox"></i><strong>{{ stats.material_requests }}</strong><span>Material Requests</span></div></div>
+  <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="150"><div class="reb-kpi"><i class="bi bi-arrow-left-right"></i><strong>{{ stats.material_movements }}</strong><span>Movements</span></div></div>
+</div>
+
+<div class="reb-panel mt-4" data-aos="fade-up">
+  <div class="reb-panel-head"><h5><i class="bi bi-lightning-charge me-2"></i>Store Workspace</h5><a class="small text-decoration-none" href="{% url 'home' %}">Visit Main Site</a></div>
+  <div class="reb-panel-body">
+    <div class="row g-3">
+      <div class="col-md-4"><a class="reb-action" href="#stock"><i class="bi bi-box-seam"></i><div><strong>Stock Overview</strong><small>Current material inventory</small></div></a></div>
+      <div class="col-md-4"><a class="reb-action" href="#alerts"><i class="bi bi-exclamation-triangle"></i><div><strong>Reorder Alerts</strong><small>Items below threshold</small></div></a></div>
+      <div class="col-md-4"><a class="reb-action" href="#movements"><i class="bi bi-arrow-left-right"></i><div><strong>Movements</strong><small>Receiving &amp; consumption</small></div></a></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100" id="stock">
+      <div class="reb-panel-head"><h5><i class="bi bi-list-ul me-2"></i>Stock Overview</h5><span class="small text-muted">Top materials</span></div>
+      <div class="reb-panel-body">
+        {% for item in materials %}
+          <div class="reb-list-item"><i class="bi bi-box"></i><div><strong>{{ item.name }}</strong><br><small class="text-muted">{{ item.category|default:"General" }} &middot; Reorder at {{ item.reorder_level }}</small></div><span class="ms-auto badge {{ item.is_low|yesno:'bg-warning-subtle text-dark,bg-success-subtle text-success' }}">{{ item.quantity_in_stock }} {{ item.unit }}</span></div>
+        {% empty %}<div class="reb-empty">No materials recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100" id="alerts">
+      <div class="reb-panel-head"><h5><i class="bi bi-exclamation-triangle me-2"></i>Reorder Alerts</h5></div>
+      <div class="reb-panel-body">
+        {% for item in low_stock_items %}
+          <div class="reb-list-item"><i class="bi bi-exclamation-circle"></i><div><strong>{{ item.name }}</strong><br><small class="text-muted">Supplier: {{ item.supplier|default:"Not assigned" }}</small></div><span class="ms-auto badge bg-warning-subtle text-dark">{{ item.quantity_in_stock }} left</span></div>
+        {% empty %}<div class="reb-empty">All stock levels are healthy.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-inbox me-2"></i>Pending Requests</h5></div>
+      <div class="reb-panel-body">
+        {% for req in requests %}
+          <div class="reb-list-item"><i class="bi bi-box-seam"></i><div><strong>{{ req.material.name }}</strong><br><small class="text-muted">{{ req.site.name }} &middot; {{ req.requested_by|default:"Site team" }}</small></div><span class="ms-auto badge bg-light text-dark">{{ req.get_status_display }}</span></div>
+        {% empty %}<div class="reb-empty">No material requests yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100" id="movements">
+      <div class="reb-panel-head"><h5><i class="bi bi-arrow-left-right me-2"></i>Recent Movements</h5></div>
+      <div class="reb-panel-body">
+        {% for move in movements %}
+          <div class="reb-list-item"><i class="bi bi-arrow-left-right"></i><div><strong>{{ move.material.name }}</strong><br><small class="text-muted">{{ move.site.name }} &middot; {{ move.date|date:"d M Y" }}</small></div><span class="ms-auto badge bg-light text-dark">{{ move.get_transaction_type_display }} {{ move.quantity }}</span></div>
+        {% empty %}<div class="reb-empty">No material movements yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

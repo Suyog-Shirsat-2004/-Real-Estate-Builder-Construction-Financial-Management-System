@@ -1,0 +1,108 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Account{% endblock %} | Real Estate Builder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <style>
+    .auth-shell { min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(135deg, #0a1b33 0%, #102a4c 55%, #132f52 100%); }
+    .auth-shell::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .35;
+      background-image: radial-gradient(circle at 15% 20%, rgba(212,175,55,.22), transparent 35%), radial-gradient(circle at 85% 80%, rgba(13,110,253,.25), transparent 40%); }
+    .auth-shell > * { position: relative; z-index: 1; }
+    .auth-nav { background: rgba(4, 18, 38, .75); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212,175,55,.25); }
+    .auth-brand { color: #fff !important; font-weight: 700; letter-spacing: .2px; }
+    .auth-brand i { color: #d4af37; }
+    .auth-card { border: 0; border-radius: 20px; box-shadow: 0 24px 60px rgba(0, 0, 0, .35); overflow: hidden; }
+    .auth-card .card-body { padding: clamp(1.5rem, 4vw, 2.75rem); }
+    .auth-heading { color: #0a1b33; font-weight: 800; }
+    .auth-subheading { color: #6c757d; }
+    .auth-btn { background: linear-gradient(135deg, #0d6efd, #0a1b33); border: 0; font-weight: 600; letter-spacing: .3px; }
+    .auth-btn:hover { background: linear-gradient(135deg, #0b5ed7, #102a4c); transform: translateY(-2px); }
+    .auth-btn-outline { background: #fffdf5; border: 1.5px solid #d4af37; color: #8a6300; font-weight: 700; transition: all .22s ease; }
+    .auth-btn-outline:hover { background: #d4af37; color: #0a1b33; transform: translateY(-2px); }
+    .auth-link { color: #0d6efd; font-weight: 600; text-decoration: none; }
+    .auth-link:hover { text-decoration: underline; }
+    .role-card { width: 100%; min-height: 92px; border: 1.5px solid #e3e8ef; border-radius: 14px; background: #fff; color: #24354f;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px;
+      font-size: .78rem; font-weight: 600; line-height: 1.2; text-align: center; transition: all .22s ease; cursor: pointer; }
+    .role-card i { font-size: 1.55rem; color: #0d6efd; }
+    .role-card:hover { border-color: #d4af37; transform: translateY(-3px); box-shadow: 0 10px 22px rgba(10, 27, 51, .12); }
+    .btn-check:checked + .role-card { border-color: #d4af37; background: linear-gradient(135deg, #fffdf5, #fff8e6);
+      box-shadow: 0 10px 24px rgba(212, 175, 55, .28); color: #0a1b33; }
+    .btn-check:checked + .role-card i { color: #b8860b; }
+    .btn-check:focus-visible + .role-card { outline: 3px solid rgba(13, 110, 253, .35); outline-offset: 2px; }
+    .role-logo { width: 38px; height: 38px; flex: 0 0 auto; }
+    .auth-aside {
+      background: linear-gradient(180deg, rgba(212,175,55,.16), rgba(13,110,253,.10)), linear-gradient(160deg, #0a1b33 0%, #102a4c 100%);
+      border-right: 1px solid rgba(212,175,55,.28);
+      color: #eaf2ff;
+    }
+    .auth-aside .auth-brand-main { display: flex; align-items: center; gap: 14px; text-decoration: none; transition: transform .2s ease; }
+    .auth-aside .auth-brand-main:hover { transform: translateY(-2px); }
+    .auth-aside .auth-brand-logo { width: 64px; height: 64px; flex: 0 0 auto; }
+    .auth-aside .auth-brand-wordmark { color: #fff; font-size: 1.3rem; font-weight: 600; line-height: 1.1; letter-spacing: .2px; }
+    .auth-aside .auth-brand-wordmark strong { display: block; color: #d4af37; font-weight: 800; font-size: 1.5rem; }
+    .auth-aside .aside-subtitle { color: #dbe7f7; font-size: .8rem; line-height: 1.5; }
+    .auth-aside .feature { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 10px;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10); color: #eaf2ff; font-size: .8rem; line-height: 1.4; }
+    .auth-aside .feature i { color: #d4af37; font-size: 1.15rem; flex: 0 0 auto; margin-top: 1px; }
+    .auth-aside .aside-roles-title { color: #d4af37; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .auth-aside .aside-role-list { display: grid; gap: 6px; }
+    .auth-aside .aside-role-list li { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 9px;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10); color: #eaf2ff; font-size: .78rem; font-weight: 600; line-height: 1.25; }
+    .auth-aside .aside-role-logo { width: 22px; height: 22px; flex: 0 0 auto; }
+    @media (max-width: 991.98px) {
+      .auth-aside { border-right: 0 !important; border-bottom: 1px solid rgba(212,175,55,.28); }
+      .auth-aside .auth-brand-logo { width: 52px; height: 52px; }
+      .auth-aside .auth-brand-wordmark { font-size: 1.15rem; }
+      .auth-aside .auth-brand-wordmark strong { font-size: 1.3rem; }
+      .auth-aside .feature { padding: 8px 10px; font-size: .78rem; }
+    }
+    .field-error { color: #b3261e; font-size: .8rem; margin-top: .25rem; }
+    .first-visit-alert { border: 1px solid #d4af37; border-left-width: 6px; background: #fffaf0; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="auth-shell">
+  <nav class="navbar navbar-expand-lg auth-nav py-3">
+    <div class="container">
+      <a class="navbar-brand auth-brand" href="{% url 'home' %}"><i class="bi bi-buildings-fill me-2"></i>Real Estate Builder</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-sm btn-outline-light" href="{% url 'home' %}"><i class="bi bi-house-door me-1"></i>Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container flex-grow-1 py-4 py-lg-5">
+    {% if messages %}
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-9">
+          {% for message in messages %}
+            <div class="alert alert-{% if 'error' in message.tags %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
+              <i class="bi {% if 'error' in message.tags %}bi-exclamation-triangle-fill{% else %}bi-info-circle{% endif %} me-2"></i>{{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% block auth_content %}{% endblock %}
+  </main>
+
+  <footer class="text-center py-3 small" style="color:#a9bdd8;">
+    &copy; 2026 Real Estate Builder &mdash; Construction &amp; Financial Management System
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>if (window.AOS) { AOS.init({ duration: 700, once: true }); }</script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

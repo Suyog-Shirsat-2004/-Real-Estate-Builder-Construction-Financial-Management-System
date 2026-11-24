@@ -1,0 +1,74 @@
+{% extends "dashboards/base_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="row g-3">
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up"><div class="reb-kpi"><i class="bi bi-geo-alt"></i><strong>{{ stats.sites }}</strong><span>My Sites</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="50"><div class="reb-kpi"><i class="bi bi-calendar-check"></i><strong>{{ stats.activities }}</strong><span>Activities</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="100"><div class="reb-kpi"><i class="bi bi-person-check"></i><strong>{{ stats.present_today }}</strong><span>Present Today</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="150"><div class="reb-kpi"><i class="bi bi-file-earmark-text"></i><strong>{{ stats.dprs }}</strong><span>Progress Reports</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="200"><div class="reb-kpi"><i class="bi bi-exclamation-circle"></i><strong>{{ stats.open_issues }}</strong><span>Open Issues</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="250"><div class="reb-kpi"><i class="bi bi-box-arrow-in-down"></i><strong>{{ stats.material_movements }}</strong><span>Material Movements</span></div></div>
+</div>
+
+<div class="reb-panel mt-4" data-aos="fade-up">
+  <div class="reb-panel-head"><h5><i class="bi bi-lightning-charge me-2"></i>Field Quick Actions</h5><span class="small text-muted">Report directly from the site</span></div>
+  <div class="reb-panel-body">
+    <div class="row g-3">
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_dashboard' %}"><i class="bi bi-speedometer2"></i><div><strong>Field Dashboard</strong><small>Live site view</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_attendance' %}"><i class="bi bi-person-check"></i><div><strong>Attendance</strong><small>Mark workers</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_photos' %}"><i class="bi bi-camera"></i><div><strong>Site Photos</strong><small>Upload progress</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_dpr' %}"><i class="bi bi-file-earmark-text"></i><div><strong>DPR</strong><small>Daily report</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_issues' %}"><i class="bi bi-exclamation-circle"></i><div><strong>Issues</strong><small>Report problems</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_receiving' %}"><i class="bi bi-box-arrow-in-down"></i><div><strong>Receiving</strong><small>Material entries</small></div></a></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-person-check me-2"></i>Recent Attendance</h5><a class="small text-decoration-none" href="{% url 'supervisor_attendance' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for row in attendance %}
+          <div class="reb-list-item"><i class="bi bi-person"></i><div><strong>{{ row.labour.name }}</strong><br><small class="text-muted">{{ row.date|date:"d M Y" }}</small></div><span class="ms-auto badge bg-light text-dark">{{ row.get_status_display }}</span></div>
+        {% empty %}<div class="reb-empty">No attendance records yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-file-earmark-text me-2"></i>Progress Reports</h5><a class="small text-decoration-none" href="{% url 'supervisor_dpr' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for report in recent_dprs %}
+          <div class="reb-list-item"><i class="bi bi-clipboard-check"></i><div><strong>{{ report.site.name }}</strong><br><small class="text-muted">{{ report.date|date:"d M Y" }} &middot; {{ report.submitted_by|default:"Site team" }}</small></div><span class="ms-auto badge bg-primary-subtle text-primary">{{ report.progress_percentage }}%</span></div>
+        {% empty %}<div class="reb-empty">No progress reports yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-exclamation-triangle me-2"></i>Open Site Issues</h5><a class="small text-decoration-none" href="{% url 'supervisor_issues' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for issue in open_issues %}
+          <div class="reb-list-item"><i class="bi bi-exclamation-circle"></i><div><strong>{{ issue.title }}</strong><br><small class="text-muted">{{ issue.site.name }} &middot; {{ issue.reported_date|date:"d M Y" }}</small></div><span class="ms-auto badge bg-danger-subtle text-danger">{{ issue.get_severity_display }}</span></div>
+        {% empty %}<div class="reb-empty">No open issues. Great work!</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-images me-2"></i>Latest Site Photos</h5><a class="small text-decoration-none" href="{% url 'supervisor_photos' %}">View all</a></div>
+      <div class="reb-panel-body">
+        <div class="d-flex flex-wrap gap-2">
+          {% for photo in recent_photos %}
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="rounded" style="width:76px;height:64px;object-fit:cover;">
+          {% empty %}<div class="reb-empty w-100">No photos uploaded yet.</div>{% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

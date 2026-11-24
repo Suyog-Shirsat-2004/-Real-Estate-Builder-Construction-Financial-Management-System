@@ -13,6 +13,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 
+from accounts.decorators import (
+    FIELD_ROLES,
+    MANAGER_ROLES,
+    module_access_required,
+    role_required,
+)
+from accounts.models import UserProfile
+
 from . import models
 from .forms import FORMS, SearchForm
 
@@ -578,6 +586,7 @@ def _detail_payload(module, section):
     return payload
 
 
+@module_access_required
 def dashboard_detail(request, module, section):
     """Return JSON details for a clickable dashboard card."""
     return JsonResponse(_detail_payload(module, section))
@@ -593,6 +602,9 @@ def home(request):
         "active_sites": models.Site.objects.filter(status=models.StatusChoices.ACTIVE).count(),
         "activities_count": models.Activity.objects.count(),
         "workers_count": models.Labour.objects.count(),
+        "materials_count": models.Material.objects.count(),
+        "contractors_count": models.Contractor.objects.count(),
+        "reports_count": models.DailyProgressReport.objects.count(),
     }
     return render(request, "ConstructionManagement/home.html", context)
 
@@ -604,6 +616,7 @@ def about(request):
 # ---------------------------------------------------------------------------
 # Generic CRUD
 # ---------------------------------------------------------------------------
+@module_access_required
 def resource_list(request, module, key, queryset=None, page_title=None):
     cfg = RESOURCES[key]
     qs = queryset if queryset is not None else cfg["model"].objects.all()
@@ -637,6 +650,7 @@ def resource_list(request, module, key, queryset=None, page_title=None):
     return render(request, template, context)
 
 
+@module_access_required
 def resource_detail(request, module, key, pk):
     cfg = RESOURCES[key]
     obj = get_object_or_404(cfg["model"], pk=pk)
@@ -649,6 +663,7 @@ def resource_detail(request, module, key, pk):
     })
 
 
+@module_access_required
 def resource_form(request, module, key, pk=None):
     cfg = RESOURCES[key]
     Form = FORMS[key]
@@ -671,6 +686,7 @@ def resource_form(request, module, key, pk=None):
     })
 
 
+@module_access_required
 def resource_delete(request, module, key, pk):
     cfg = RESOURCES[key]
     obj = get_object_or_404(cfg["model"], pk=pk)
@@ -684,6 +700,7 @@ def resource_delete(request, module, key, pk):
     })
 
 
+@role_required(*MANAGER_ROLES)
 def verify_dpr(request, pk):
     if request.method != "POST":
         return HttpResponseForbidden()
@@ -696,20 +713,25 @@ def verify_dpr(request, pk):
     return redirect("manager_dpr")
 
 
+@role_required(*FIELD_ROLES)
 def mark_notification_read(request, pk):
     if request.method != "POST":
+        return HttpResponseForbidden()
+    module = request.POST.get("module", "manager")
+    profile = getattr(request.user, "profile", None)
+    if module == "manager" and (profile is None or profile.role != UserProfile.ROLE_BUILDER):
         return HttpResponseForbidden()
     notification = get_object_or_404(models.Notification, pk=pk)
     notification.is_read = True
     notification.save(update_fields=["is_read"])
     messages.success(request, "Notification marked as read.")
-    module = request.POST.get("module", "manager")
     return redirect("manager_notifications" if module == "manager" else "supervisor_notifications")
 
 
 # ---------------------------------------------------------------------------
 # Site Manager dashboard and special pages
 # ---------------------------------------------------------------------------
+@role_required(*MANAGER_ROLES)
 def manager_dashboard(request):
     today = timezone.localdate()
     month_ago = today - timedelta(days=30)
@@ -768,6 +790,7 @@ def manager_dashboard(request):
     return render(request, "ConstructionManagement/site_manager/dashboard.html", context)
 
 
+@role_required(*MANAGER_ROLES)
 def manager_page(request, page):
     if page == "dashboard":
         return manager_dashboard(request)
@@ -787,6 +810,7 @@ def manager_page(request, page):
     return redirect("manager_dashboard")
 
 
+@module_access_required
 def finance(request, module):
     budgets = models.Budget.objects.all()
     expenses = models.Expense.objects.all()
@@ -804,6 +828,7 @@ def finance(request, module):
     })
 
 
+@module_access_required
 def reports(request, module):
     module_dir = "site_manager" if module == "manager" else "site_supervisor"
     return render(request, f"ConstructionManagement/{module_dir}/reports.html", {
@@ -816,6 +841,7 @@ def reports(request, module):
     })
 
 
+@module_access_required
 def quality_safety(request, module):
     module_dir = "site_manager" if module == "manager" else "site_supervisor"
     return render(request, f"ConstructionManagement/{module_dir}/quality_safety.html", {
@@ -825,6 +851,7 @@ def quality_safety(request, module):
     })
 
 
+@module_access_required
 def settings_page(request, module):
     module_dir = "site_manager" if module == "manager" else "site_supervisor"
     if request.method == "POST":
@@ -840,6 +867,7 @@ def settings_page(request, module):
 # ---------------------------------------------------------------------------
 # Site Supervisor dashboard and special pages
 # ---------------------------------------------------------------------------
+@role_required(*FIELD_ROLES)
 def supervisor_dashboard(request):
     today = timezone.localdate()
     sites = models.Site.objects.all()
@@ -884,6 +912,7 @@ def supervisor_dashboard(request):
     return render(request, "ConstructionManagement/site_supervisor/dashboard.html", context)
 
 
+@role_required(*FIELD_ROLES)
 def supervisor_page(request, page):
     if page == "dashboard":
         return supervisor_dashboard(request)

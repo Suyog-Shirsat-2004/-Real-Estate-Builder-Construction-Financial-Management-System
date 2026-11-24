@@ -1,0 +1,72 @@
+{% extends "dashboards/base_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="row g-3">
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up"><div class="reb-kpi"><i class="bi bi-diagram-3"></i><strong>{{ stats.projects }}</strong><span>Projects</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="50"><div class="reb-kpi"><i class="bi bi-geo-alt"></i><strong>{{ stats.sites }}</strong><span>Sites</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="100"><div class="reb-kpi"><i class="bi bi-building"></i><strong>{{ stats.active_sites }}</strong><span>Active Sites</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="150"><div class="reb-kpi"><i class="bi bi-wallet2"></i><strong>&#8377;{{ stats.budget_allocated|floatformat:0 }}</strong><span>Budget Allocated</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="200"><div class="reb-kpi"><i class="bi bi-cash-stack"></i><strong>&#8377;{{ stats.expenses_total|floatformat:0 }}</strong><span>Expenses</span></div></div>
+  <div class="col-6 col-lg-4 col-xl-2" data-aos="fade-up" data-aos-delay="250"><div class="reb-kpi"><i class="bi bi-people"></i><strong>{{ stats.workers }}</strong><span>Workers</span></div></div>
+</div>
+
+<div class="reb-panel mt-4" data-aos="fade-up">
+  <div class="reb-panel-head"><h5><i class="bi bi-lightning-charge me-2"></i>Quick Actions</h5><span class="small text-muted">Full access as Builder / Admin</span></div>
+  <div class="reb-panel-body">
+    <div class="row g-3">
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'manager_dashboard' %}"><i class="bi bi-speedometer2"></i><div><strong>Manager Workspace</strong><small>Control &amp; approvals</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'supervisor_dashboard' %}"><i class="bi bi-hardhat"></i><div><strong>Field Workspace</strong><small>Site operations</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'manager_projects' %}"><i class="bi bi-diagram-3"></i><div><strong>Projects</strong><small>Plan &amp; track</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'manager_finance' %}"><i class="bi bi-cash-coin"></i><div><strong>Finance</strong><small>Budget &amp; expenses</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'manager_reports' %}"><i class="bi bi-bar-chart-line"></i><div><strong>Reports</strong><small>Live analytics</small></div></a></div>
+      <div class="col-6 col-md-4 col-xl-2"><a class="reb-action" href="{% url 'manager_notifications' %}"><i class="bi bi-bell"></i><div><strong>Notifications</strong><small>Team updates</small></div></a></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-file-earmark-text me-2"></i>Recent Progress Reports</h5><a class="small text-decoration-none" href="{% url 'manager_dpr' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for report in recent_dprs %}
+          <div class="reb-list-item"><i class="bi bi-clipboard-check"></i><div><strong>{{ report.site.name }}</strong><br><small class="text-muted">{{ report.date|date:"d M Y" }} &middot; {{ report.submitted_by|default:"Site team" }}</small></div><span class="ms-auto badge bg-light text-dark">{{ report.progress_percentage }}%</span></div>
+        {% empty %}<div class="reb-empty">No progress reports yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-activity me-2"></i>Latest Activities</h5><a class="small text-decoration-none" href="{% url 'manager_activities' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for activity in recent_activities %}
+          <div class="reb-list-item"><i class="bi bi-check2-square"></i><div><strong>{{ activity.title }}</strong><br><small class="text-muted">{{ activity.site.name }} &middot; {{ activity.start_date|date:"d M Y" }}</small></div><span class="ms-auto badge bg-primary-subtle text-primary">{{ activity.get_status_display }}</span></div>
+        {% empty %}<div class="reb-empty">No activities recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-lg-6" data-aos="fade-up">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-receipt me-2"></i>Recent Expenses</h5><a class="small text-decoration-none" href="{% url 'manager_finance' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for expense in recent_expenses %}
+          <div class="reb-list-item"><i class="bi bi-cash"></i><div><strong>{{ expense.category }}</strong><br><small class="text-muted">{{ expense.project.name }} &middot; {{ expense.date|date:"d M Y" }}</small></div><span class="ms-auto fw-bold">&#8377;{{ expense.amount|floatformat:0 }}</span></div>
+        {% empty %}<div class="reb-empty">No expenses recorded yet.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+    <div class="reb-panel h-100">
+      <div class="reb-panel-head"><h5><i class="bi bi-exclamation-triangle me-2"></i>Low Stock Alert</h5><a class="small text-decoration-none" href="{% url 'manager_materials' %}">View all</a></div>
+      <div class="reb-panel-body">
+        {% for material in low_stock_items %}
+          <div class="reb-list-item"><i class="bi bi-box-seam"></i><div><strong>{{ material.name }}</strong><br><small class="text-muted">Reorder at {{ material.reorder_level }} {{ material.unit }}</small></div><span class="ms-auto badge bg-warning-subtle text-dark">{{ material.quantity_in_stock }} left</span></div>
+        {% empty %}<div class="reb-empty">All materials are above reorder level.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -8,6 +8,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   <script>document.documentElement.classList.add('js-enabled');</script>
   {% block extra_css %}{% endblock %}
@@ -21,7 +23,7 @@
     <main class="container-fluid px-3 px-lg-4 py-4">
       {% if messages %}
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+          <div class="alert alert-{% if 'error' in message.tags %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
@@ -32,12 +34,12 @@
     {% include "ConstructionManagement/partials/_footer.html" %}
   </div>
 {% else %}
-  {% include "ConstructionManagement/partials/_public_nav.html" %}
+  {% if dashboard_shell %}{% include "dashboards/_dashboard_nav.html" %}{% else %}{% include "ConstructionManagement/partials/_public_nav.html" %}{% endif %}
   <main>
     {% if messages %}
       <div class="container mt-3">
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+          <div class="alert alert-{% if 'error' in message.tags %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
@@ -75,6 +77,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>if (window.AOS) { AOS.init({ duration: 700, once: true, offset: 60 }); }</script>
 <script src="{% static 'js/script.js' %}"></script>
 {% block extra_js %}{% endblock %}
 </body>

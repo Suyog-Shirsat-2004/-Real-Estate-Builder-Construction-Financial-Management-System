@@ -28,7 +28,16 @@
       <li class="nav-item"><a class="nav-link" href="{% url 'manager_settings' %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
     </ul>
   {% else %}
-    <div class="sidebar-role"><i class="bi bi-hardhat me-2"></i>Site Supervisor Module</div>
+    <div class="sidebar-role">
+      <i class="bi bi-hardhat me-2"></i>
+      {% if user.is_authenticated and user.profile.role == 'SITE_ENGINEER' %}
+        Site Engineer &middot; Field Workspace
+      {% elif user.is_authenticated and user.profile.role == 'BUILDER' %}
+        Builder &middot; Field Workspace
+      {% else %}
+        Site Supervisor Module
+      {% endif %}
+    </div>
     <ul class="nav flex-column sidebar-nav">
       <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'supervisor_dashboard' %}active{% endif %}" href="{% url 'supervisor_dashboard' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
       <li class="nav-item"><a class="nav-link" href="{% url 'supervisor_assigned_sites' %}"><i class="bi bi-geo-alt me-2"></i>My Assigned Sites</a></li>

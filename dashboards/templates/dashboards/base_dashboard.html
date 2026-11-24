@@ -1,0 +1,56 @@
+{% extends "ConstructionManagement/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+  {{ block.super }}
+  <style>
+    .reb-dash-hero { position: relative; overflow: hidden; border-radius: 18px; padding: 26px 30px; margin-bottom: 24px; color: #fff;
+      background: radial-gradient(circle at 88% 20%, rgba(212,175,55,.28), transparent 32%), linear-gradient(120deg, #0a1b33, #14375f); }
+    .reb-dash-hero::after { content: ""; position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 1px solid rgba(255,255,255,.12); right: -70px; top: -130px; }
+    .reb-dash-hero h1 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin: 0; }
+    .reb-dash-hero p { margin: 6px 0 0; color: rgba(233,241,255,.78); font-size: .88rem; }
+    .reb-role-pill { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 30px; font-size: .74rem; font-weight: 700;
+      background: rgba(212,175,55,.16); color: #f7e7b5; border: 1px solid rgba(212,175,55,.5); white-space: nowrap; }
+    .reb-user-name { font-size: .8rem; color: rgba(255,255,255,.8); font-weight: 600; }
+    .reb-dash-icon { width: 64px; height: 64px; flex: 0 0 64px; border-radius: 16px; display: grid; place-items: center; font-size: 1.9rem;
+      background: rgba(212,175,55,.18); color: var(--reb-gold); border: 1px solid rgba(212,175,55,.4); }
+    .reb-kpi { position: relative; overflow: hidden; border: 1px solid #e7ecf3; border-radius: 14px; padding: 18px; background: #fff; height: 100%;
+      transition: transform .25s ease, box-shadow .25s ease; animation: rebFadeUp .5s ease both; }
+    .reb-kpi:hover { transform: translateY(-5px); box-shadow: 0 16px 32px rgba(10,27,51,.12); }
+    .reb-kpi i { font-size: 1.5rem; color: var(--reb-gold-dark); }
+    .reb-kpi strong { display: block; font-size: 1.65rem; font-weight: 800; color: var(--reb-navy); line-height: 1.1; margin-top: 8px; }
+    .reb-kpi span { display: block; font-size: .75rem; color: #6d7a8d; font-weight: 600; margin-top: 4px; }
+    .reb-panel { border: 1px solid #e7ecf3; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(10,27,51,.05); overflow: hidden; }
+    .reb-panel-head { padding: 14px 18px; border-bottom: 1px solid #eef1f5; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .reb-panel-head h5 { font-size: .95rem; font-weight: 700; color: var(--reb-navy); margin: 0; }
+    .reb-panel-body { padding: 16px 18px; }
+    .reb-action { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 13px; text-decoration: none; color: var(--reb-ink);
+      background: #f8fafc; border: 1px solid #e8edf4; height: 100%; transition: all .22s ease; }
+    .reb-action i { font-size: 1.35rem; color: var(--reb-navy); }
+    .reb-action strong { display: block; font-size: .85rem; }
+    .reb-action small { display: block; font-size: .72rem; color: #7a879a; }
+    .reb-action:hover { transform: translateY(-4px); border-color: var(--reb-gold); text-decoration: none; color: var(--reb-navy); box-shadow: 0 12px 24px rgba(10,27,51,.1); }
+    .reb-list-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px dashed #e6ebf2; font-size: .84rem; }
+    .reb-list-item:last-child { border-bottom: 0; }
+    .reb-list-item i { color: var(--reb-gold-dark); }
+    .reb-list-item .ms-auto { color: #6d7a8d; font-size: .78rem; }
+    .reb-empty { color: #8a97a8; font-size: .85rem; text-align: center; padding: 22px 0; }
+    @media (max-width: 575.98px) { .reb-dash-hero { padding: 20px; } .reb-dash-icon { display: none; } }
+  </style>
+{% endblock %}
+
+{% block public_content %}
+<div class="container-fluid py-4">
+  <div class="reb-dash-hero d-flex align-items-center gap-3 animate__animated animate__fadeInDown">
+    <div class="reb-dash-icon d-none d-sm-grid"><i class="bi {{ page_icon }}"></i></div>
+    <div class="flex-grow-1">
+      <h1><i class="bi {{ page_icon }} me-2"></i>{{ page_title }}</h1>
+      <p>Welcome back, <strong class="text-white">{{ user_full_name }}</strong> &middot; {{ today|date:"l, d F Y" }} &middot; Here is your live workspace overview.</p>
+    </div>
+    <span class="reb-role-pill d-none d-md-inline-flex"><i class="bi {{ role_icon }} me-1"></i>{{ role_label }}</span>
+  </div>
+  {% block dashboard_content %}{% endblock %}
+</div>
+{% endblock %}
